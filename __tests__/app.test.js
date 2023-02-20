@@ -29,15 +29,26 @@ describe("app", () => {
     });
   });
   describe("get /api/categories", () => {
-    test("200: GET /api/categories responds with treasures data", () => {
+    test("200: GET /api/categories responds with categories data", () => {
       return request(app)
         .get("/api/categories")
         .expect(200)
         .then(({ body }) => {
-          expect(body.length).toBe(4);
+          expect(body.catogData.length).toBe(4);
         });
+    });
+    describe("get /api/categories", () => {
+      test("200: GET /api/categories responds with categories data", () => {
+        return request(app)
+          .get("/api/categories")
+          .expect(200)
+          .then(({ body }) => {
+            expect.objectContaining({
+              slug: expect.any(String),
+              description: expect.any(String),
+            });
+          });
+      });
     });
   });
 });
-
-("testpull");

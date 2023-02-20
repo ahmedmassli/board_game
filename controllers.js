@@ -2,7 +2,8 @@ const fetchCategories = require("./models");
 
 function getCategories(request, response) {
   fetchCategories().then((catogData) => {
-    response.send(catogData);
+    const obj = { catogData: catogData };
+    response.send(obj);
   });
 }
 
