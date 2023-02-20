@@ -8,3 +8,5 @@
 3. if you are using ubuntu run `sudo service postgresql start` to connect to the database
 4. `npm run setup-dbs` to set up the databases
 5. `npm run seed` to execute the seed file
+
+test push
