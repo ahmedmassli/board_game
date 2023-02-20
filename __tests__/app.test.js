@@ -43,10 +43,12 @@ describe("app", () => {
           .get("/api/categories")
           .expect(200)
           .then(({ body }) => {
-            expect.objectContaining({
-              slug: expect.any(String),
-              description: expect.any(String),
-            });
+            expect(body.catogData[0]).toEqual(
+              expect.objectContaining({
+                slug: expect.any(String),
+                description: expect.any(String),
+              })
+            );
           });
       });
     });
