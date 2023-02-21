@@ -28,4 +28,21 @@ function fetchReviews() {
     });
 }
 
-module.exports = { fetchCategories, fetchReviews };
+function fetchReviewId(review_id) {
+  let queryString = `
+        SELECT reviews.owner, reviews.title, reviews.review_id, reviews.review_img_url, reviews.category, reviews.created_at,reviews.votes,reviews.designer,reviews.review_body
+        FROM reviews
+        `;
+  const queryParams = [];
+
+  if (review_id !== undefined) {
+    queryString += "WHERE review_id=$1;";
+    queryParams.push(review_id);
+  }
+  return db.query(queryString, queryParams).then((result) => {
+    const revs = result.rows;
+    return revs;
+  });
+}
+
+module.exports = { fetchCategories, fetchReviews, fetchReviewId };

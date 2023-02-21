@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const { getCategories, getReviews } = require("./controllers");
+const { getCategories, getReviews, getReviewID } = require("./controllers");
 const { handleServerErrors } = require("./errors/index");
 
 app.get("/api", (request, response) => {
@@ -10,6 +10,8 @@ app.get("/api", (request, response) => {
 app.get("/api/categories", getCategories);
 
 app.get("/api/reviews", getReviews);
+
+app.get("/api/reviews/:review_id", getReviewID);
 
 app.use(handleServerErrors);
 
