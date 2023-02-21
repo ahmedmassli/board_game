@@ -64,6 +64,14 @@ describe("get /api/reviews", () => {
         expect(body.revData.length).toBe(13);
       });
   });
+  test("200: GET /api/reviews responds with reviews data", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then(({ body }) => {
+        body.revData.length > 0;
+      });
+  });
   describe("get /api/reviews", () => {
     test("200: GET /api/reviews responds with reviews data", () => {
       return request(app)
@@ -85,6 +93,7 @@ describe("get /api/reviews", () => {
           );
         });
     });
+
     test("200: GET /api/reviews responds with reviews data", () => {
       return request(app)
         .get("/api/reviews")
