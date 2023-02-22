@@ -162,13 +162,21 @@ describe("get /api/reviews/4", () => {
         );
       });
   });
-  // test("404: /api/reviews/999 responds with err since it does not exist", () => {
-  //   return request(app)
-  //     .get("/api/reviews/999")
-  //     .expect(404)
-  //     .then(({ body }) => {
-  //       expect(body.msg).toBe("review_id not found");
-  //     });
-  // });
+  test("404: /api/reviews/999 responds with err since it does not exist", () => {
+    return request(app)
+      .get("/api/reviews/999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("review_id not found");
+      });
+  });
+  test("400: /api/reviews/banana responds with err since it does not exist", () => {
+    return request(app)
+      .get("/api/reviews/banana")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("msg", "Bad Request");
+      });
+  });
 });
-("22");
+// no comments test
