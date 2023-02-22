@@ -132,4 +132,51 @@ describe("get /api/reviews", () => {
   });
 });
 
-("testpush");
+describe("get /api/reviews/4", () => {
+  test("200: /api/reviews/4 responds with review data of id=4", () => {
+    return request(app)
+      .get("/api/reviews/4")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.revData.length).toBe(1);
+        expect(body.revData[0].review_id).toBe(4);
+      });
+  });
+  test("200: GET /api/reviews responds with reviews data", () => {
+    return request(app)
+      .get("/api/reviews/4")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.revData[0]).toEqual(
+          expect.objectContaining({
+            review_id: expect.any(Number),
+            title: expect.any(String),
+            review_body: expect.any(String),
+            designer: expect.any(String),
+            review_img_url: expect.any(String),
+            votes: expect.any(Number),
+            category: expect.any(String),
+            owner: expect.any(String),
+            created_at: expect.any(String),
+          })
+        );
+      });
+  });
+  test("404: /api/reviews/999 responds with err since it does not exist", () => {
+    return request(app)
+      .get("/api/reviews/999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("review_id not found");
+      });
+  });
+  test("400: /api/reviews/banana responds with err since it does not exist", () => {
+    return request(app)
+      .get("/api/reviews/banana")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("msg", "Bad Request");
+      });
+  });
+});
+// no comments test

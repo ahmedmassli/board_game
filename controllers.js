@@ -1,4 +1,4 @@
-const { fetchCategories, fetchReviews } = require("./models");
+const { fetchCategories, fetchReviews, fetchReviewId } = require("./models");
 
 function getCategories(request, response, next) {
   fetchCategories()
@@ -22,4 +22,16 @@ function getReviews(request, response, next) {
     });
 }
 
-module.exports = { getCategories, getReviews };
+function getReviewID(request, response, next) {
+  const { review_id } = request.params;
+  fetchReviewId(review_id)
+    .then((revData) => {
+      const obj = { revData: revData };
+      response.send(obj);
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+module.exports = { getCategories, getReviews, getReviewID };
