@@ -181,7 +181,7 @@ describe("get /api/reviews/4", () => {
 });
 
 describe("get /api/reviews/2/comments", () => {
-  test("200: /api/reviews/2/comments responds with an array of comments data of id=4", () => {
+  test("200: /api/reviews/2/comments responds with an array of comments data of id=2", () => {
     return request(app)
       .get("/api/reviews/2/comments")
       .expect(200)
@@ -191,7 +191,7 @@ describe("get /api/reviews/2/comments", () => {
         expect(body.revData[0].review_id).toBe(2);
       });
   });
-  test("200: /api/reviews/2/comments responds with an array of comments data of id=4", () => {
+  test("200: /api/reviews/2/comments responds with an array of comments data of id=2", () => {
     return request(app)
       .get("/api/reviews/2/comments")
       .expect(200)
@@ -220,6 +220,30 @@ describe("get /api/reviews/2/comments", () => {
         console.log(sortedComments);
         console.log(body.revData);
         expect(body.revData).toEqual(sortedComments);
+      });
+  });
+  test("200: /api/reviews/4/comments responds with an empty array of comments data of id=4", () => {
+    return request(app)
+      .get("/api/reviews/4/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.revData.length).toBe(0);
+      });
+  });
+  test("404: /api/reviews/999 responds with err since it does not exist", () => {
+    return request(app)
+      .get("/api/reviews/999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("review_id not found");
+      });
+  });
+  test("400: /api/reviews/banana responds with err since it does not exist", () => {
+    return request(app)
+      .get("/api/reviews/banana")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("msg", "Bad Request");
       });
   });
 });

@@ -61,9 +61,10 @@ function fetchCommentsByReviewId(review_id) {
   }
   return db.query(queryString, queryParams).then((result) => {
     const revs = result.rows;
-    if (result.rowCount === 0) {
-      return Promise.reject("review_id not found");
-    }
+    console.log(result.rowCount);
+    // if (result.rowCount === 0) {
+    //   return Promise.reject("review_id not found");
+    // }
     return revs;
   });
 }
