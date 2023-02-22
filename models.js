@@ -48,4 +48,29 @@ function fetchReviewId(review_id) {
   });
 }
 
-module.exports = { fetchCategories, fetchReviews, fetchReviewId };
+function fetchCommentsByReviewId(review_id) {
+  let queryString = `
+        SELECT comments.comment_id, comments.votes, comments.created_at, comments.author, comments.body, comments.review_id
+        FROM comments
+        `;
+  const queryParams = [];
+
+  if (review_id !== undefined) {
+    queryString += "WHERE review_id=$1 ORDER BY comments.created_at DESC;";
+    queryParams.push(review_id);
+  }
+  return db.query(queryString, queryParams).then((result) => {
+    const revs = result.rows;
+    if (result.rowCount === 0) {
+      return Promise.reject("review_id not found");
+    }
+    return revs;
+  });
+}
+
+module.exports = {
+  fetchCategories,
+  fetchReviews,
+  fetchReviewId,
+  fetchCommentsByReviewId,
+};

@@ -179,4 +179,49 @@ describe("get /api/reviews/4", () => {
       });
   });
 });
-// no comments test
+
+describe("get /api/reviews/2/comments", () => {
+  test("200: /api/reviews/2/comments responds with an array of comments data of id=4", () => {
+    return request(app)
+      .get("/api/reviews/2/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.revData.length).toBe(3);
+        console.log(body);
+        expect(body.revData[0].review_id).toBe(2);
+      });
+  });
+  test("200: /api/reviews/2/comments responds with an array of comments data of id=4", () => {
+    return request(app)
+      .get("/api/reviews/2/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.revData[0]).toEqual(
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            review_id: expect.any(Number),
+          })
+        );
+      });
+  });
+  test("200: GET /api/reviews/2/comments sorts date by ascending order.", () => {
+    return request(app)
+      .get("/api/reviews/2/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const copyBody = [...body.revData];
+        const sortedComments = copyBody.sort((commentA, commentB) => {
+          return commentA.date - commentB.date;
+        });
+        console.log(sortedComments);
+        console.log(body.revData);
+        expect(body.revData).toEqual(sortedComments);
+      });
+  });
+});
+
+// no comments test review_id=4 has no comments adjust the test for ittt
