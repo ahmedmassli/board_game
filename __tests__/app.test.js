@@ -173,9 +173,9 @@ describe("get /api/reviews/4", () => {
   test("400: /api/reviews/banana responds with err since it does not exist", () => {
     return request(app)
       .get("/api/reviews/banana")
-      .expect(400)
+      .expect(404)
       .then(({ body }) => {
-        expect(body).toHaveProperty("msg", "Bad Request");
+        expect(body).toHaveProperty("msg", "wrong path given");
       });
   });
 });
@@ -274,9 +274,78 @@ describe("get /api/reviews/2/comments", () => {
   test("400: /api/reviews/banana responds with err since it does not exist", () => {
     return request(app)
       .get("/api/reviews/banana")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("msg", "wrong path given");
+      });
+  });
+});
+
+describe("post /api/reviews/id/comments", () => {
+  test("201: /api/reviews/3/comments responds with review data of id=3", () => {
+    return request(app)
+      .post("/api/reviews/3/comments")
+      .send({
+        username: "philippaclaire9",
+        body: "My kitty loved this game too!",
+      })
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.comment).toEqual({
+          body: "My kitty loved this game too!",
+          votes: 0,
+          author: "philippaclaire9",
+          review_id: 3,
+          created_at: expect.any(String),
+          comment_id: 7,
+        });
+      });
+  });
+
+  test("400: /api/reviews/3/comments responds with err since its missing body input", () => {
+    return request(app)
+      .post("/api/reviews/3/comments")
+      .send({
+        username: "philippaclaire9",
+      })
       .expect(400)
       .then(({ body }) => {
-        expect(body).toHaveProperty("msg", "Bad Request");
+        expect(body.msg).toBe("missing input");
+      });
+  });
+  test("400: /api/reviews/3/comments responds with err  since its missing username input", () => {
+    return request(app)
+      .post("/api/reviews/3/comments")
+      .send({
+        body: "My kitty loved this game too!",
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("missing input");
+      });
+  });
+  test("404: /api/reviews/999/comments responds with err since it does not exist", () => {
+    return request(app)
+      .post("/api/reviews/999/comments")
+      .send({
+        username: "philippaclaire9",
+        body: "My kitty loved this game too!",
+      })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("invalid review id");
+      });
+  });
+  test("404: /api/reviews/banana/comments responds with err since it does not exist", () => {
+    return request(app)
+      .post("/api/reviews/banana/comments")
+      .send({
+        username: "philippaclaire9",
+        body: "My kitty loved this game too!",
+      })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("wrong path given");
       });
   });
 });

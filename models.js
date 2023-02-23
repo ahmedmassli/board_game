@@ -83,9 +83,31 @@ function fetchCommentsByReviewId(review_id) {
     });
 }
 
+function addCommentsByUsername(review_id, author, body) {
+  const queryParams = [];
+  queryParams.push(review_id, author, body);
+
+  return db
+    .query(
+      `
+        INSERT INTO comments ( body, review_id, author)
+        VALUES ($3, $1, $2)     
+        RETURNING *   
+        ;
+        `,
+      queryParams
+    )
+    .then((result) => {
+      console.log(result.detail);
+
+      return result.rows[0];
+    });
+}
+
 module.exports = {
   fetchCategories,
   fetchReviews,
   fetchReviewId,
   fetchCommentsByReviewId,
+  addCommentsByUsername,
 };
