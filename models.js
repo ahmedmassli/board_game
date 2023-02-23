@@ -48,21 +48,39 @@ function fetchReviewId(review_id) {
   });
 }
 
+// function fetchCommentsByReviewId(review_id) {
+//   let queryString = `
+//         SELECT comments.comment_id, comments.votes, comments.created_at, comments.author, comments.body, comments.review_id
+//         FROM comments
+//         `;
+//   const queryParams = [];
+
+//   if (review_id !== undefined) {
+//     queryString += "WHERE review_id=$1 ORDER BY comments.created_at DESC;";
+//     queryParams.push(review_id);
+//   }
+//   return db.query(queryString, queryParams).then((result) => {
+//     const revs = result.rows;
+//     return revs;
+//   });
+// }
+
 function fetchCommentsByReviewId(review_id) {
-  let queryString = `
+  const queryParams = [];
+  queryParams.push(review_id);
+
+  return db
+    .query(
+      `
         SELECT comments.comment_id, comments.votes, comments.created_at, comments.author, comments.body, comments.review_id
         FROM comments
-        `;
-  const queryParams = [];
-
-  if (review_id !== undefined) {
-    queryString += "WHERE review_id=$1 ORDER BY comments.created_at DESC;";
-    queryParams.push(review_id);
-  }
-  return db.query(queryString, queryParams).then((result) => {
-    const revs = result.rows;
-    return revs;
-  });
+        WHERE review_id=$1 ORDER BY comments.created_at DESC;
+        `,
+      queryParams
+    )
+    .then((result) => {
+      return result.rows;
+    });
 }
 
 module.exports = {
