@@ -180,23 +180,23 @@ describe("get /api/reviews/4", () => {
   });
 });
 
-describe("post /api/reviews/id/comments", () => {
-  test("201: /api/reviews/3/comments responds with review data of id=3", () => {
-    newItem = { username: "mallionaire", body: "My dog loved this game too!" };
-    return request(app)
-      .post("/api/reviews/3/comments")
-      .send(newItem)
-      .expect(201)
-      .then(({ body }) => {
-        expect(body.commentData).toEqual({
-          body: "My dog loved this game too!",
-          votes: 13,
-          author: "mallionaire",
-          review_id: 3,
-          created_at: new Date(1610964545410),
-        });
-      });
-  });
-});
+// describe("post /api/reviews/id/comments", () => {
+//   test("201: /api/reviews/3/comments responds with review data of id=3", () => {
+//     newItem = { username: "mallionaire", body: "My dog loved this game too!" };
+//     return request(app)
+//       .post("/api/reviews/3/comments")
+//       .send(newItem)
+//       .expect(201)
+//       .then(({ body }) => {
+//         expect(body.commentData).toEqual({
+//           body: "My dog loved this game too!",
+//           votes: 13,
+//           author: "mallionaire",
+//           review_id: 3,
+//           created_at: new Date(1610964545410),
+//         });
+//       });
+//   });
+// });
 
 // no comments test

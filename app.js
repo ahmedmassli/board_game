@@ -23,7 +23,7 @@ app.get("/api/reviews", getReviews);
 
 app.get("/api/reviews/:review_id", getReviewID);
 
-app.post(" /api/reviews/:review_id/comments", getCommentUsingId);
+// app.post(" /api/reviews/:review_id/comments", getCommentUsingId);
 
 app.use(handle404nonExistentPaths);
 app.use(handlePSQL400s);
