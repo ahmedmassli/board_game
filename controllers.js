@@ -34,4 +34,18 @@ function getReviewID(request, response, next) {
     });
 }
 
-module.exports = { getCategories, getReviews, getReviewID };
+function getCommentUsingId(request, response, next) {
+  console.log(review_id);
+  const { review_id } = request.params;
+
+  fetchReviewId(review_id)
+    .then((revData) => {
+      const obj = { revData: revData };
+      response.send(obj);
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+module.exports = { getCategories, getReviews, getReviewID, getCommentUsingId };
