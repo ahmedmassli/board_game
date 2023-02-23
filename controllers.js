@@ -1,4 +1,9 @@
-const { fetchCategories, fetchReviews, fetchReviewId } = require("./models");
+const {
+  fetchCategories,
+  fetchReviews,
+  fetchReviewId,
+  fetchCommentByUsername,
+} = require("./models");
 
 function getCategories(request, response, next) {
   fetchCategories()
@@ -39,6 +44,19 @@ function getCommentUsingId(request, response, next) {
   const { review_id } = request.params;
 
   fetchReviewId(review_id)
+    .then((revData) => {
+      const obj = { revData: revData };
+      response.send(obj);
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+function getCommentUsingUsername(request, response, next) {
+  const { review_id } = request.params;
+
+  fetchCommentByUsername(review_id)
     .then((revData) => {
       const obj = { revData: revData };
       response.send(obj);

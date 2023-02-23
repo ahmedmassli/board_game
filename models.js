@@ -48,6 +48,24 @@ function fetchReviewId(review_id) {
   });
 }
 
+function fetchCommentByUsername(review_id, username, body) {
+  const queryParams = [];
+  queryParams.push(review_id, username, body);
+
+  return db
+    .query(
+      `
+        SELECT comments.comment_id, comments.votes, comments.created_at, comments.author, comments.body, comments.review_id
+        FROM comments
+        WHERE review_id=$1 ORDER BY comments.created_at DESC;
+        `,
+      queryParams
+    )
+    .then((result) => {
+      return result.rows;
+    });
+}
+
 // function fetchReviews(review_id, username, body) {
 //   return db
 //     .query(
@@ -64,4 +82,9 @@ function fetchReviewId(review_id) {
 //     });
 // }
 
-module.exports = { fetchCategories, fetchReviews, fetchReviewId };
+module.exports = {
+  fetchCategories,
+  fetchReviews,
+  fetchReviewId,
+  fetchCommentByUsername,
+};
