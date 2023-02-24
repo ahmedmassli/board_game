@@ -48,23 +48,6 @@ function fetchReviewId(review_id) {
   });
 }
 
-// function fetchCommentsByReviewId(review_id) {
-//   let queryString = `
-//         SELECT comments.comment_id, comments.votes, comments.created_at, comments.author, comments.body, comments.review_id
-//         FROM comments
-//         `;
-//   const queryParams = [];
-
-//   if (review_id !== undefined) {
-//     queryString += "WHERE review_id=$1 ORDER BY comments.created_at DESC;";
-//     queryParams.push(review_id);
-//   }
-//   return db.query(queryString, queryParams).then((result) => {
-//     const revs = result.rows;
-//     return revs;
-//   });
-// }
-
 function fetchCommentsByReviewId(review_id) {
   const queryParams = [];
   queryParams.push(review_id);
@@ -98,9 +81,37 @@ function addCommentsByUsername(review_id, author, body) {
       queryParams
     )
     .then((result) => {
-      console.log(result.detail);
+      const rowCount = result.rowCount;
+      if (rowCount === 0) {
+        return Promise.reject("review_id not found");
+      } else {
+        return result.rows[0];
+      }
+    });
+}
 
-      return result.rows[0];
+function changeVotes(review_id, inc_vot) {
+  const queryParams = [];
+  queryParams.push(review_id, inc_vot);
+
+  return db
+    .query(
+      ` 
+        UPDATE reviews
+        SET votes = votes+$2
+        WHERE review_id=$1
+        RETURNING * 
+        ;
+        `,
+      queryParams
+    )
+    .then((result) => {
+      const rowCount = result.rowCount;
+      if (rowCount === 0) {
+        return Promise.reject("review_id not found");
+      } else {
+        return result.rows[0];
+      }
     });
 }
 
@@ -110,4 +121,5 @@ module.exports = {
   fetchReviewId,
   fetchCommentsByReviewId,
   addCommentsByUsername,
+  changeVotes,
 };

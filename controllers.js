@@ -4,6 +4,7 @@ const {
   fetchReviewId,
   fetchCommentsByReviewId,
   addCommentsByUsername,
+  changeVotes,
 } = require("./models");
 
 function getCategories(request, response, next) {
@@ -67,10 +68,25 @@ function getRequestInfo(request, response, next) {
     });
 }
 
+function updateReview(request, response, next) {
+  const { review_id } = request.params;
+  const inc_vot = request.body.inc_votes;
+
+  changeVotes(review_id, inc_vot)
+    .then((comment) => {
+      const obj = { comment: comment };
+      response.status(201).send(obj);
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
 module.exports = {
   getCategories,
   getReviews,
   getReviewID,
   getReviewIDforComments,
   getRequestInfo,
+  updateReview,
 };
