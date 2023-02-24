@@ -64,6 +64,7 @@ function getRequestInfo(request, response, next) {
       response.status(201).send(obj);
     })
     .catch((err) => {
+      console.log(err);
       next(err);
     });
 }

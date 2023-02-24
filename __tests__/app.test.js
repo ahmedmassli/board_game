@@ -173,9 +173,9 @@ describe("get /api/reviews/4", () => {
   test("400: /api/reviews/banana responds with err since it does not exist", () => {
     return request(app)
       .get("/api/reviews/banana")
-      .expect(404)
+      .expect(400)
       .then(({ body }) => {
-        expect(body).toHaveProperty("msg", "invalid type of input");
+        expect(body).toHaveProperty("msg", "Bad Request");
       });
   });
 });
@@ -274,9 +274,9 @@ describe("get /api/reviews/2/comments", () => {
   test("400: /api/reviews/banana responds with err since it does not exist", () => {
     return request(app)
       .get("/api/reviews/banana")
-      .expect(404)
+      .expect(400)
       .then(({ body }) => {
-        expect(body).toHaveProperty("msg", "invalid type of input");
+        expect(body).toHaveProperty("msg", "Bad Request");
       });
   });
 });
@@ -333,19 +333,19 @@ describe("post /api/reviews/id/comments", () => {
       })
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("invalid input");
+        expect(body.msg).toBe("not found");
       });
   });
-  test("404: /api/reviews/banana/comments responds with err since it does not exist", () => {
+  test("400: /api/reviews/banana/comments responds with err since it does not exist", () => {
     return request(app)
       .post("/api/reviews/banana/comments")
       .send({
         username: "philippaclaire9",
         body: "My kitty loved this game too!",
       })
-      .expect(404)
+      .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("invalid type of input");
+        expect(body.msg).toBe("Bad Request");
       });
   });
   test("404: /api/reviews/3/comments responds with err since username not in database", () => {
@@ -357,7 +357,7 @@ describe("post /api/reviews/id/comments", () => {
       })
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("invalid input");
+        expect(body.msg).toBe("not found");
       });
   });
 });
@@ -405,13 +405,14 @@ describe("patch /api/reviews/4", () => {
         });
       });
   });
-  test("404: /api/reviews/4 responds with eror for type of input", () => {
+  test("400: /api/reviews/4 responds with eror for type of input", () => {
     return request(app)
       .patch("/api/reviews/4")
       .send({ inc_votes: "ahmed" })
-      .expect(404)
+      .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("invalid type of input");
+        console.log(body);
+        expect(body.msg).toBe("Bad Request");
       });
   });
   test("400: /api/reviews/4 responds with eror", () => {
@@ -422,22 +423,22 @@ describe("patch /api/reviews/4", () => {
         expect(body.msg).toBe("missing input");
       });
   });
-  test("404: /api/reviews/banana responds with eror ", () => {
+  test("400: /api/reviews/banana responds with eror ", () => {
     return request(app)
       .patch("/api/reviews/banana")
-      .send({ inc_votes: "ahmed" })
-      .expect(404)
+      .send({ inc_votes: 4 })
+      .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("invalid type of input");
+        expect(body.msg).toBe("Bad Request");
       });
   });
   test("404: /api/reviews/999 responds with eror ", () => {
     return request(app)
       .patch("/api/reviews/999")
-      .send({ inc_votes: "ahmed" })
+      .send({ inc_votes: 2 })
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("invalid type of input");
+        expect(body.msg).toBe("review_id not found");
       });
   });
 });

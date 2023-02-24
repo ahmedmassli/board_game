@@ -35,8 +35,9 @@ app.post("/api/reviews/:review_id/comments", getRequestInfo);
 app.patch("/api/reviews/:review_id", updateReview);
 
 app.use(handle404nonExistentPaths);
-app.use(handlePSQL400s);
 app.use(handleCustomErrors);
+
+app.use(handlePSQL400s);
 app.use(handleServerErrors);
 
 module.exports = app;
