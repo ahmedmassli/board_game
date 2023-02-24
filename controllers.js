@@ -5,6 +5,7 @@ const {
   fetchCommentsByReviewId,
   addCommentsByUsername,
   changeVotes,
+  fetchUsers,
 } = require("./models");
 
 function getCategories(request, response, next) {
@@ -82,6 +83,16 @@ function updateReview(request, response, next) {
     });
 }
 
+function getUsers(request, response, next) {
+  fetchUsers()
+    .then((users) => {
+      response.send(users);
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
 module.exports = {
   getCategories,
   getReviews,
@@ -89,4 +100,5 @@ module.exports = {
   getReviewIDforComments,
   getRequestInfo,
   updateReview,
+  getUsers,
 };

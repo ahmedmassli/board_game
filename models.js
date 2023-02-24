@@ -115,6 +115,18 @@ function changeVotes(review_id, inc_vot) {
     });
 }
 
+function fetchUsers() {
+  return db
+    .query(
+      `
+        SELECT * FROM users
+        `
+    )
+    .then((Users) => {
+      return Users.rows;
+    });
+}
+
 module.exports = {
   fetchCategories,
   fetchReviews,
@@ -122,4 +134,5 @@ module.exports = {
   fetchCommentsByReviewId,
   addCommentsByUsername,
   changeVotes,
+  fetchUsers,
 };
