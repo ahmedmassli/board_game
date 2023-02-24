@@ -7,6 +7,7 @@ const {
   getReviewIDforComments,
   getRequestInfo,
   updateReview,
+  getUsers,
 } = require("./controllers");
 
 const {
@@ -33,6 +34,8 @@ app.get("/api/reviews/:review_id/comments", getReviewIDforComments);
 app.post("/api/reviews/:review_id/comments", getRequestInfo);
 
 app.patch("/api/reviews/:review_id", updateReview);
+
+app.get("/api/users", getUsers);
 
 app.use(handle404nonExistentPaths);
 app.use(handleCustomErrors);
