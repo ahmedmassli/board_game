@@ -411,7 +411,6 @@ describe("patch /api/reviews/4", () => {
       .send({ inc_votes: "ahmed" })
       .expect(400)
       .then(({ body }) => {
-        console.log(body);
         expect(body.msg).toBe("Bad Request");
       });
   });
