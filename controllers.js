@@ -3,6 +3,7 @@ const {
   fetchReviews,
   fetchReviewId,
   fetchCommentsByReviewId,
+  addCommentsByUsername,
 } = require("./models");
 
 function getCategories(request, response, next) {
@@ -51,9 +52,25 @@ function getReviewIDforComments(request, response, next) {
     });
 }
 
+function getRequestInfo(request, response, next) {
+  const { review_id } = request.params;
+  const author = request.body.username;
+  const body = request.body.body;
+
+  addCommentsByUsername(review_id, author, body)
+    .then((comment) => {
+      const obj = { comment: comment };
+      response.status(201).send(obj);
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
 module.exports = {
   getCategories,
   getReviews,
   getReviewID,
   getReviewIDforComments,
+  getRequestInfo,
 };
