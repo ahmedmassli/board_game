@@ -98,8 +98,26 @@ function addCommentsByUsername(review_id, author, body) {
       queryParams
     )
     .then((result) => {
-      console.log(result.detail);
+      return result.rows[0];
+    });
+}
 
+function changeVotes(review_id, inc_vot) {
+  const queryParams = [];
+  queryParams.push(review_id, inc_vot);
+
+  return db
+    .query(
+      ` 
+        UPDATE reviews
+        SET votes = votes+$2
+        WHERE review_id=$1
+        RETURNING * 
+        ;
+        `,
+      queryParams
+    )
+    .then((result) => {
       return result.rows[0];
     });
 }
@@ -110,4 +128,5 @@ module.exports = {
   fetchReviewId,
   fetchCommentsByReviewId,
   addCommentsByUsername,
+  changeVotes,
 };
