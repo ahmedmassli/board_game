@@ -333,7 +333,7 @@ describe("post /api/reviews/id/comments", () => {
       })
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("invalid review id");
+        expect(body.msg).toBe("invalid input");
       });
   });
   test("404: /api/reviews/banana/comments responds with err since it does not exist", () => {
@@ -346,6 +346,18 @@ describe("post /api/reviews/id/comments", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("wrong path given");
+      });
+  });
+  test("404: /api/reviews/3/comments responds with err since username not in database", () => {
+    return request(app)
+      .post("/api/reviews/3/comments")
+      .send({
+        username: "ahmed",
+        body: "My kitty loved this game too!",
+      })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("invalid input");
       });
   });
 });
