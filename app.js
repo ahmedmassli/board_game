@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const {
   getCategories,
@@ -16,7 +17,7 @@ const {
   handleCustomErrors,
   handleServerErrors,
 } = require("./errors/index");
-
+app.use(cors());
 app.use(express.json());
 
 app.get("/api", (request, response) => {
