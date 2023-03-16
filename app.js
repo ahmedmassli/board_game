@@ -9,6 +9,7 @@ const {
   getRequestInfo,
   updateReview,
   getUsers,
+  getReviewQuery,
 } = require("./controllers");
 
 const {
@@ -26,7 +27,7 @@ app.get("/api", (request, response) => {
 
 app.get("/api/categories", getCategories);
 
-app.get("/api/reviews", getReviews);
+app.get("/api/reviews", getReviewQuery);
 
 app.get("/api/reviews/:review_id", getReviewID);
 
