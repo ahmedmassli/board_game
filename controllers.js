@@ -6,6 +6,7 @@ const {
   addCommentsByUsername,
   changeVotes,
   fetchUsers,
+  fetchReviewsByQuery,
 } = require("./models");
 
 function getCategories(request, response, next) {
@@ -93,6 +94,21 @@ function getUsers(request, response, next) {
     });
 }
 
+function getReviewQuery(request, response, next) {
+  const category = request.query.category;
+  const sort_by = request.query.sort_by;
+  const order = request.query.order;
+
+  fetchReviewsByQuery(category, sort_by, order)
+    .then((revData) => {
+      const obj = { revData: revData };
+      response.send(obj);
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
 module.exports = {
   getCategories,
   getReviews,
@@ -101,4 +117,5 @@ module.exports = {
   getRequestInfo,
   updateReview,
   getUsers,
+  getReviewQuery,
 };

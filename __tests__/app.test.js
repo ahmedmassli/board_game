@@ -477,4 +477,84 @@ describe("get /api/users", () => {
       });
   });
 });
+
+describe("get /api/reviews for query", () => {
+  test("200: /api/reviews responds with reviews with category given in the query", () => {
+    return request(app)
+      .get("/api/reviews/?category=social deduction")
+      .expect(200)
+      .then(({ body }) => {
+        body.revData.forEach((element) =>
+          expect(element).toEqual(
+            expect.objectContaining({
+              review_id: expect.any(Number),
+              title: expect.any(String),
+              review_body: expect.any(String),
+              designer: expect.any(String),
+              review_img_url: expect.any(String),
+              votes: expect.any(Number),
+              category: "social deduction",
+              owner: expect.any(String),
+              created_at: expect.any(String),
+            })
+          )
+        );
+      });
+  });
+  test("200: /api/reviews responds with reviews sorted by column given in the query", () => {
+    return request(app)
+      .get("/api/reviews/?sort_by=votes")
+      .expect(200)
+      .then(({ body }) => {
+        const copyBody = [...body.revData];
+        const sortedReviews = copyBody.sort((reviewA, reviewB) => {
+          return reviewB.date - reviewA.date;
+        });
+
+        expect(body.revData).toEqual(sortedReviews);
+      });
+  });
+  test("200: /api/reviews responds with reviews sorted by column given in the query", () => {
+    return request(app)
+      .get("/api/reviews/?sort_by=votes&order=ASC")
+      .expect(200)
+      .then(({ body }) => {
+        const copyBody = [...body.revData];
+        const sortedReviews = copyBody.sort((reviewA, reviewB) => {
+          return reviewA.date - reviewB.date;
+        });
+        expect(body.revData).toEqual(sortedReviews);
+      });
+  });
+
+  test("200: /api/reviews responds with reviews with category given in the query", () => {
+    return request(app)
+      .get("/api/reviews/?category=social deduction&sort_by=votes&order=ASC")
+      .expect(200)
+      .then(({ body }) => {
+        const copyBody = [...body.revData];
+        const sortedReviews = copyBody.sort((reviewA, reviewB) => {
+          return reviewA.date - reviewB.date;
+        });
+        expect(body.revData).toEqual(sortedReviews);
+
+        body.revData.forEach((element) =>
+          expect(element).toEqual(
+            expect.objectContaining({
+              review_id: expect.any(Number),
+              title: expect.any(String),
+              review_body: expect.any(String),
+              designer: expect.any(String),
+              review_img_url: expect.any(String),
+              votes: expect.any(Number),
+              category: "social deduction",
+              owner: expect.any(String),
+              created_at: expect.any(String),
+            })
+          )
+        );
+      });
+  });
+});
+
 // PATCH /api/reviews/:review_id no comments test review_id=4 has no comments adjust the test for ittt

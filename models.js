@@ -127,25 +127,52 @@ function fetchUsers() {
     });
 }
 
-// function fetchReviewsByQuery(review_id) {
-//   let queryString = `
-//         SELECT reviews.owner, reviews.title, reviews.review_id, reviews.review_img_url, reviews.category, reviews.created_at,reviews.votes,reviews.designer,reviews.review_body
-//         FROM reviews
-//         `;
-//   const queryParams = [];
+function fetchReviewsByQuery(category, sort_by, order) {
+  const queryValues = [];
 
-//   if (review_id !== undefined) {
-//     queryString += "WHERE review_id=$1;";
-//     queryParams.push(review_id);
-//   }
-//   return db.query(queryString, queryParams).then((result) => {
-//     const revs = result.rows;
-//     if (result.rowCount === 0) {
-//       return Promise.reject("review_id not found");
-//     }
-//     return revs;
-//   });
-// }
+  let queryString = `
+        SELECT * FROM reviews
+        `;
+
+  if (category !== undefined) {
+    queryValues.push(category);
+    queryString += "WHERE category=$1";
+  }
+
+  if (sort_by !== undefined && order !== undefined) {
+    queryString += `ORDER BY reviews.${sort_by} ${order}`;
+  } else if (sort_by !== undefined && order === undefined) {
+    queryString += `ORDER BY reviews.${sort_by} DESC`;
+  } else if (
+    sort_by === undefined &&
+    order === undefined &&
+    category === undefined
+  ) {
+    return db
+      .query(
+        `
+        SELECT reviews.owner, reviews.title, reviews.review_id, reviews.review_img_url, reviews.category, reviews.created_at,reviews.votes,reviews.designer,CAST(COUNT(comments.review_id) AS int) AS comment_count
+        FROM reviews
+        LEFT JOIN comments ON comments.review_id = reviews.review_id
+        GROUP BY reviews.review_id
+        ORDER BY reviews.created_at DESC        ;
+        `
+      )
+      .then((fetchCategories) => {
+        return fetchCategories.rows;
+      });
+  }
+
+  queryString += ";";
+
+  return db.query(queryString, queryValues).then((result) => {
+    const revs = result.rows;
+    if (result.rowCount === 0) {
+      return Promise.reject("not found");
+    }
+    return revs;
+  });
+}
 
 module.exports = {
   fetchCategories,
@@ -155,4 +182,5 @@ module.exports = {
   addCommentsByUsername,
   changeVotes,
   fetchUsers,
+  fetchReviewsByQuery,
 };
