@@ -28,24 +28,46 @@ function fetchReviews() {
     });
 }
 
-function fetchReviewId(review_id) {
-  let queryString = `
-        SELECT reviews.owner, reviews.title, reviews.review_id, reviews.review_img_url, reviews.category, reviews.created_at,reviews.votes,reviews.designer,reviews.review_body
+function fetchReviewId(review_id, comment_count) {
+  if (comment_count) {
+    let queryString = `
+        SELECT reviews.owner, reviews.title, reviews.review_id, reviews.review_img_url, reviews.category, reviews.created_at,reviews.votes,reviews.designer,reviews.review_body,CAST(COUNT(comments.review_id) AS int) AS comment_count
         FROM reviews
+        LEFT JOIN comments ON comments.review_id = reviews.review_id 
         `;
-  const queryParams = [];
+    const queryParams = [];
 
-  if (review_id !== undefined) {
-    queryString += "WHERE review_id=$1;";
-    queryParams.push(review_id);
-  }
-  return db.query(queryString, queryParams).then((result) => {
-    const revs = result.rows;
-    if (result.rowCount === 0) {
-      return Promise.reject("review_id not found");
+    if (review_id !== undefined) {
+      queryString += `WHERE reviews.review_id=$1 
+              GROUP BY reviews.review_id;`;
+      queryParams.push(review_id);
     }
-    return revs;
-  });
+    return db.query(queryString, queryParams).then((result) => {
+      const revs = result.rows;
+      if (result.rowCount === 0) {
+        return Promise.reject("review_id not found");
+      }
+      return revs;
+    });
+  } else {
+    let queryString = `
+          SELECT reviews.owner, reviews.title, reviews.review_id, reviews.review_img_url, reviews.category, reviews.created_at,reviews.votes,reviews.designer,reviews.review_body
+          FROM reviews
+          `;
+    const queryParams = [];
+
+    if (review_id !== undefined) {
+      queryString += "WHERE review_id=$1;";
+      queryParams.push(review_id);
+    }
+    return db.query(queryString, queryParams).then((result) => {
+      const revs = result.rows;
+      if (result.rowCount === 0) {
+        return Promise.reject("review_id not found");
+      }
+      return revs;
+    });
+  }
 }
 
 function fetchCommentsByReviewId(review_id) {

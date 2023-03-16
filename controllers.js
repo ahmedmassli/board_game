@@ -32,8 +32,9 @@ function getReviews(request, response, next) {
 }
 
 function getReviewID(request, response, next) {
+  const comment_count = request.query.comment_count;
   const { review_id } = request.params;
-  fetchReviewId(review_id)
+  fetchReviewId(review_id, comment_count)
     .then((revData) => {
       const obj = { revData: revData };
       response.send(obj);
