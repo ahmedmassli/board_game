@@ -530,13 +530,15 @@ describe("get /api/reviews for query", () => {
 
   test("200: /api/reviews responds with reviews with category given in the query", () => {
     return request(app)
-      .get("/api/reviews/?category=social deduction&sort_by=votes&order=ASC")
+      .get(
+        "/api/reviews/?category=social deduction&sort_by=comment_count&order=ASC"
+      )
       .expect(200)
       .then(({ body }) => {
         const copyBody = [...body.revData];
 
         const sortedReviews = copyBody.sort((reviewA, reviewB) => {
-          return reviewA.date - reviewB.date;
+          return reviewA.comment_count - reviewB.comment_count;
         });
 
         expect(body.revData).toEqual(sortedReviews);

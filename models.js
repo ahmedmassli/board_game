@@ -175,10 +175,10 @@ function fetchReviewsByQuery(category, sort_by, order) {
 
   if (sort_by !== undefined && order !== undefined) {
     queryString += ` 
-    ORDER BY reviews.${sort_by} ${order}`;
+    ORDER BY ${sort_by} ${order}`;
   } else if (sort_by !== undefined && order === undefined) {
     queryString += ` 
-    ORDER BY reviews.${sort_by} DESC`;
+    ORDER BY ${sort_by} DESC`;
   } else if (category === undefined) {
     return db
       .query(
