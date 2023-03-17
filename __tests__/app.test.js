@@ -158,6 +158,7 @@ describe("get /api/reviews/4", () => {
             category: expect.any(String),
             owner: expect.any(String),
             created_at: expect.any(String),
+            comment_count: expect.any(Number),
           })
         );
       });
@@ -557,27 +558,27 @@ describe("get /api/reviews for query", () => {
   });
 });
 
-// describe("get /api/reviews/:review_id for query", () => {
-//   test("200: /api/reviews/:review_id responds with reviews with category given in the query", () => {
-//     return request(app)
-//       .get("/api/reviews/9?comment_count=yes ")
-//       .expect(200)
-//       .then(({ body }) => {
-//         expect(body.revData[0]).toEqual(
-//           expect.objectContaining({
-//             review_id: expect.any(Number),
-//             title: expect.any(String),
-//             review_body: expect.any(String),
-//             designer: expect.any(String),
-//             review_img_url: expect.any(String),
-//             votes: expect.any(Number),
-//             category: expect.any(String),
-//             owner: expect.any(String),
-//             created_at: expect.any(String),
-//             comment_count: 2,
-//           })
-//         );
-//       });
-//   });
-// });
+describe("get /api/reviews/:review_id for query", () => {
+  test("200: /api/reviews/:review_id responds with reviews with category given in the query", () => {
+    return request(app)
+      .get("/api/reviews/2")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.revData[0]).toEqual(
+          expect.objectContaining({
+            review_id: expect.any(Number),
+            title: expect.any(String),
+            review_body: expect.any(String),
+            designer: expect.any(String),
+            review_img_url: expect.any(String),
+            votes: expect.any(Number),
+            category: expect.any(String),
+            owner: expect.any(String),
+            created_at: expect.any(String),
+            comment_count: 3,
+          })
+        );
+      });
+  });
+});
 // PATCH /api/reviews/:review_id no comments test review_id=4 has no comments adjust the test for ittt
