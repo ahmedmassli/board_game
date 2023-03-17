@@ -504,7 +504,7 @@ describe("get /api/reviews for query", () => {
   });
   test("200: /api/reviews responds with reviews sorted by column given in the query", () => {
     return request(app)
-      .get("/api/reviews/?sort_by=votes")
+      .get("/api/reviews/?category=social deduction&sort_by=votes")
       .expect(200)
       .then(({ body }) => {
         const copyBody = [...body.revData];
@@ -517,7 +517,7 @@ describe("get /api/reviews for query", () => {
   });
   test("200: /api/reviews responds with reviews sorted by column given in the query", () => {
     return request(app)
-      .get("/api/reviews/?sort_by=votes&order=ASC")
+      .get("/api/reviews/?category=social deduction&sort_by=votes&order=DESC")
       .expect(200)
       .then(({ body }) => {
         const copyBody = [...body.revData];
@@ -534,9 +534,11 @@ describe("get /api/reviews for query", () => {
       .expect(200)
       .then(({ body }) => {
         const copyBody = [...body.revData];
+
         const sortedReviews = copyBody.sort((reviewA, reviewB) => {
           return reviewA.date - reviewB.date;
         });
+
         expect(body.revData).toEqual(sortedReviews);
 
         body.revData.forEach((element) =>

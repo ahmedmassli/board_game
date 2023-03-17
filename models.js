@@ -153,18 +153,32 @@ function fetchReviewsByQuery(category, sort_by, order) {
   const queryValues = [];
 
   let queryString = `
-        SELECT * FROM reviews
-        `;
+  SELECT reviews.owner, reviews.title, reviews.review_body, reviews.review_id, reviews.review_img_url, reviews.category, reviews.created_at,reviews.votes,reviews.designer,CAST(COUNT(comments.review_id) AS int) AS comment_count
+  FROM reviews
+  LEFT JOIN comments ON comments.review_id = reviews.review_id
+                `;
 
   if (category !== undefined) {
     queryValues.push(category);
-    queryString += "WHERE category=$1";
+    queryString += `WHERE category=$1 
+    GROUP BY reviews.review_id`;
+  } else {
+    return db.query(
+      `
+        SELECT reviews.owner, reviews.title, reviews.review_body, reviews.review_id, reviews.review_img_url, reviews.category, reviews.created_at,reviews.votes,reviews.designer,CAST(COUNT(comments.review_id) AS int) AS comment_count
+        FROM reviews
+        LEFT JOIN comments ON comments.review_id = reviews.review_id
+        GROUP BY reviews.review_id ;
+        `
+    );
   }
 
   if (sort_by !== undefined && order !== undefined) {
-    queryString += `ORDER BY reviews.${sort_by} ${order}`;
+    queryString += ` 
+    ORDER BY reviews.${sort_by} ${order}`;
   } else if (sort_by !== undefined && order === undefined) {
-    queryString += `ORDER BY reviews.${sort_by} DESC`;
+    queryString += ` 
+    ORDER BY reviews.${sort_by} DESC`;
   } else if (category === undefined) {
     return db
       .query(
@@ -193,7 +207,7 @@ function fetchReviewsByQuery(category, sort_by, order) {
       });
   }
 
-  queryString += ";";
+  queryString += `;`;
 
   return db.query(queryString, queryValues).then((result) => {
     const revs = result.rows;
