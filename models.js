@@ -181,7 +181,7 @@ function fetchReviewsByQuery(category, sort_by, order) {
   } else if (order !== undefined && sort_by === undefined) {
     return db
       .query(
-        `
+        ""`
         SELECT reviews.owner, reviews.title, reviews.review_body, reviews.review_id, reviews.review_img_url, reviews.category, reviews.created_at,reviews.votes,reviews.designer,CAST(COUNT(comments.review_id) AS int) AS comment_count
         FROM reviews
         LEFT JOIN comments ON comments.review_id = reviews.review_id
